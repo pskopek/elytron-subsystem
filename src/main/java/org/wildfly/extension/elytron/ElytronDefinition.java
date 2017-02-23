@@ -57,6 +57,9 @@ import org.jboss.as.server.DeploymentProcessorTarget;
 import org.jboss.as.server.deployment.Phase;
 import org.jboss.dmr.ModelNode;
 import org.jboss.dmr.ModelType;
+import org.jboss.modules.ModuleIdentifier;
+import org.jboss.modules.ModuleLoadException;
+import org.jboss.modules.ModuleLoader;
 import org.jboss.msc.service.Service;
 import org.jboss.msc.service.ServiceBuilder;
 import org.jboss.msc.service.ServiceController;
@@ -221,7 +224,19 @@ class ElytronDefinition extends SimpleResourceDefinition {
         resourceRegistration.registerSubModel(AuthenticationClientDefinitions.getAuthenticationContextDefinition());
 
         // Policy
-        resourceRegistration.registerSubModel(PolicyDefinitions.getPolicy());
+        ModuleLoader moduleLoader = ModuleLoader.forClass(ElytronDefinition.class);
+        if (moduleLoader != null) {
+            try {
+                moduleLoader.loadModule(ModuleIdentifier.fromString("javax.security.jacc.api"));
+                resourceRegistration.registerSubModel(PolicyDefinitions.getPolicy());
+            } catch (ModuleLoadException e) {
+                ROOT_LOGGER.moduleNotPresentCannotLoadResource("javax.security.jacc.api", ElytronDescriptionConstants.JACC_POLICY);
+            }
+        } else {
+            // when there is no modular loader, just register it (mainly for tests)
+            // proper classes should be on classpath
+            resourceRegistration.registerSubModel(PolicyDefinitions.getPolicy());
+        }
     }
 
     @Override

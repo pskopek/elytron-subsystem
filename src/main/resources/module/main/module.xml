@@ -29,7 +29,7 @@
 
     <dependencies>
         <module name="javax.api"/>
-        <module name="javax.security.jacc.api"/>
+        <module name="javax.security.jacc.api" optional="true"/>
         <module name="sun.jdk"/>
         <module name="org.jboss.jandex"/>
         <module name="org.jboss.staxmapper"/>
@@ -42,6 +42,6 @@
         <module name="org.wildfly.common"/>
         <module name="org.wildfly.security.elytron"/>
         <!-- Temporary due to backward compatibility with the configuration of JACC and related services -->
-        <module name="org.picketbox"/>
+        <module name="org.picketbox" optional="true"/>
     </dependencies>
 </module>

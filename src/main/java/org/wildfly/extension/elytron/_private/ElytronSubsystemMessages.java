@@ -280,6 +280,10 @@ public interface ElytronSubsystemMessages extends BasicLogger {
     @Message(id = 32, value = "Unable to reload CRL file.")
     RuntimeException unableToReloadCRL(@Cause Exception cause);
 
+    @LogMessage(level = WARN)
+    @Message(id = 33, value = "Module \"%s\" is not present. Resource not loaded (\"%s\").")
+    void moduleNotPresentCannotLoadResource(String module, String resource);
+
     // CREDENTIAL_STORE section
     @Message(id = 909, value = "Credential store '%s' does not support given credential store entry type '%s'")
     IllegalArgumentException credentialStoreEntryTypeNotSupported(String credentialStoreName, String entryType);
